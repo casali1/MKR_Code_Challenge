@@ -27,7 +27,7 @@ namespace MKR_Code_Challenge.Controllers
         //The advantage of Lazy Loading is that you only work with the entities you need.
         
         //The disadvantage of Lazy Loading is that you have multiple trips back and forth to the database and it takes
-        //longer to execute any data retrievals.
+        //longer to execute any data retrievals..
 
         // GET: Employees
         public async Task<IActionResult> Index()
