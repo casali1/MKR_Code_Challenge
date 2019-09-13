@@ -20,11 +20,12 @@ namespace MKR_Code_Challenge.Controllers
         }
 
         //The advantage of Eager Loading is that you have all of the related Entities at your disposal immeidately
-        // especially when there is a constant need for access to data in any and all related tables.
+        // especially when there is a constant need for access to the data in any and all related tables.
 
         //The disadvantage of Eager Loading is the Entity Framework creates complex joins.
 
-        //The advantage of Lazy Loading is that you only work with the entities you need.
+        //The advantage of Lazy Loading is that you only work with the entities you need.  Less amount of data is transferred over the network
+        //at any given time
         
         //The disadvantage of Lazy Loading is that you have multiple trips back and forth to the database and it takes
         //longer to execute any data retrievals..
@@ -33,7 +34,7 @@ namespace MKR_Code_Challenge.Controllers
         public async Task<IActionResult> Index()
         {
 
-            //This is an example of Eager Loading.  By "Including the Department mode" in this LINQ statement,
+            //This is an example of Eager Loading.  By "Including the Department mode" in this LINQ statement, <----------------------------------------Eager Loading
             //I am loading the Department immediately upon the initial database request.
             var employee = await _context.Employees
                                 .Include(e => e.Departments)                        
@@ -52,7 +53,7 @@ namespace MKR_Code_Challenge.Controllers
                                 .AsNoTracking()
                                 .FirstOrDefaultAsync(m => m.ID == id);
 
-            //This is an example of Lazy Loading.  I am loading the related entity, Department, in the navigation property of Employee
+            //This is an example of Lazy Loading.  I am loading the related entity, Department, in the navigation property of Employee <---------------------Lazy Loading
             //entity.  It is a delayed loading of the Department entity.
             employee.Departments = _context.Departments.Where(x => x.DepartmentID == employee.DepartmentID).SingleOrDefault();
 
@@ -105,7 +106,7 @@ namespace MKR_Code_Challenge.Controllers
         // POST: Employees/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost, ActionName("Edit")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([Bind("ID,FirstName,LastName,PhoneNumber,DepartmentID")] Employee employeeInput)
         {
