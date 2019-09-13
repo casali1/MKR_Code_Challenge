@@ -29,12 +29,12 @@ namespace MKR_Code_Challenge.Data
 
             var employees = new List<Employee>
             {
-            new Employee{FirstName="Carson",LastName="Alexander",PhoneNumber="111-222-3333", Departments = departments.FirstOrDefault(d => d.DepartmentID == 1)},
-            new Employee{FirstName="Meredith",LastName="Alonso",PhoneNumber="222-333-5555", Departments = departments.FirstOrDefault(d => d.DepartmentID == 2)},
-            new Employee{FirstName="Arturo",LastName="Anand",PhoneNumber="999-888-7777", Departments = departments.FirstOrDefault(d => d.DepartmentID == 3)},
-            new Employee{FirstName="Gytis",LastName="Barzdukas",PhoneNumber="444-555-6666", Departments = departments.FirstOrDefault(d => d.DepartmentID == 1)},
-            new Employee{FirstName="Yan",LastName="Li",PhoneNumber="666-777-8888", Departments = departments.FirstOrDefault(d => d.DepartmentID == 2)},
-            new Employee{FirstName="Peggy",LastName="Justice",PhoneNumber="444-333-2222", Departments = departments.FirstOrDefault(d => d.DepartmentID == 3)},
+            new Employee{FirstName="Carson",LastName="Alexander",PhoneNumber="111-222-3333", DepartmentID = 1, Departments = departments.FirstOrDefault(d => d.DepartmentID == 1)},
+            new Employee{FirstName="Meredith",LastName="Alonso",PhoneNumber="222-333-5555", DepartmentID = 2, Departments = departments.FirstOrDefault(d => d.DepartmentID == 2)},
+            new Employee{FirstName="Arturo",LastName="Anand",PhoneNumber="999-888-7777",DepartmentID = 3, Departments = departments.FirstOrDefault(d => d.DepartmentID == 3)},
+            new Employee{FirstName="Gytis",LastName="Barzdukas",PhoneNumber="444-555-6666",DepartmentID = 1, Departments = departments.FirstOrDefault(d => d.DepartmentID == 1)},
+            new Employee{FirstName="Yan",LastName="Li",PhoneNumber="666-777-8888",DepartmentID = 2, Departments = departments.FirstOrDefault(d => d.DepartmentID == 2)},
+            new Employee{FirstName="Peggy",LastName="Justice",PhoneNumber="444-333-2222",DepartmentID = 3, Departments = departments.FirstOrDefault(d => d.DepartmentID == 3)},
 
             };
 

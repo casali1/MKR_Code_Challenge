@@ -23,7 +23,7 @@ namespace MKR_Code_Challenge.Controllers
         public async Task<IActionResult> Index()
         {
             var employee = await _context.Employees
-                                .Include(e => e.Departments)
+                                .Include(e => e.Departments)                        
                                 .AsNoTracking()
                                 .ToListAsync();
 
@@ -57,7 +57,7 @@ namespace MKR_Code_Challenge.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,FirstName,LastName,PhoneNumber")] Employee employee)
+        public async Task<IActionResult> Create([Bind("ID,FirstName,LastName,PhoneNumber,DepartmentID")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -91,23 +91,27 @@ namespace MKR_Code_Challenge.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPost(int? id)
+        public async Task<IActionResult> Edit([Bind("ID,FirstName,LastName,PhoneNumber,DepartmentID")] Employee employeeInput)
         {
-            if (id == null) return NotFound();
-
-            var employee = await _context.Employees
-                                .Include(e => e.Departments)
+             var employee = await _context.Employees
                                 .AsNoTracking()
-                                .FirstOrDefaultAsync(m => m.ID == id);
+                                .FirstOrDefaultAsync(m => m.ID == employeeInput.ID);
 
-            if (await TryUpdateModelAsync<Employee>(employee,""))
+            if (employee != null)
+            {
+                _context.Remove(employee);
+                await _context.SaveChangesAsync();
+            }
+
+            if (ModelState.IsValid)
             {
                 try
                 {
-                   // _context.Update(employee);
+                    employeeInput.ID = 0;
+                    _context.Add(employeeInput);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateException /* ex */)
+                catch (DbUpdateException ex)
                 {
                     //Log the error (uncomment ex variable name and write a log.)
                     ModelState.AddModelError("", "Unable to save changes. " +
@@ -152,11 +156,10 @@ namespace MKR_Code_Challenge.Controllers
         }
 
         private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
-        {
-            var departmentsQuery = from d in _context.Departments
-                                   orderby d.DepartmentName
-                                   select d;
-            ViewBag.DepartmentID = new SelectList(departmentsQuery.AsNoTracking(), "DepartmentID", "Name", selectedDepartment);
+        { 
+            var departmentsQuery = _context.Departments.GroupBy(x => x.DepartmentName).Select(x => x.FirstOrDefault());
+
+            ViewBag.DepartmentID = new SelectList(departmentsQuery, "DepartmentID", "DepartmentName", selectedDepartment);
         }
     }
 }
