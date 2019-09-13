@@ -19,11 +19,11 @@ namespace MKR_Code_Challenge.Data
             var employees = new Employee[]
             {
             new Employee{FirstName="Carson",LastName="Alexander",PhoneNumber="111-222-3333"},
-            new Employee{FirstName="Meredith",LastName="Alonso",,PhoneNumber="222-333-5555"},
-            new Employee{FirstName="Arturo",LastName="Anand",,PhoneNumber="999-888-7777"},
-            new Employee{FirstName="Gytis",LastName="Barzdukas",,PhoneNumber="444-555-6666"},
-            new Employee{FirstName="Yan",LastName="Li",,PhoneNumber="666-777-8888"},
-            new Employee{FirstName="Peggy",LastName="Justice",,PhoneNumber="444-333-2222"},
+            new Employee{FirstName="Meredith",LastName="Alonso",PhoneNumber="222-333-5555"},
+            new Employee{FirstName="Arturo",LastName="Anand",PhoneNumber="999-888-7777"},
+            new Employee{FirstName="Gytis",LastName="Barzdukas",PhoneNumber="444-555-6666"},
+            new Employee{FirstName="Yan",LastName="Li",PhoneNumber="666-777-8888"},
+            new Employee{FirstName="Peggy",LastName="Justice",PhoneNumber="444-333-2222"},
 
             };
             foreach (Employee e in employees)
