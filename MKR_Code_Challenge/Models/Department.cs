@@ -12,7 +12,6 @@ namespace MKR_Code_Challenge.Models
 
         public string DepartmentName { get; set; }
 
-        public int EmployeeID { get; set; }
-        public Employee Employee { get; set; }
+        public ICollection<Employee> Employee { get; set; }
     }
 }

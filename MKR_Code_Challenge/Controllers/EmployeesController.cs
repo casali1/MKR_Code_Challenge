@@ -22,7 +22,12 @@ namespace MKR_Code_Challenge.Controllers
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employees.ToListAsync());
+            var employee = await _context.Employees
+                                .Include(e => e.Departments)
+                                .AsNoTracking()
+                                .ToListAsync();
+
+            return View(employee);
         }
 
         // GET: Employees/Details/5
@@ -30,7 +35,10 @@ namespace MKR_Code_Challenge.Controllers
         {
             if (id == null) return NotFound();
 
-            var employee = await _context.Employees.FirstOrDefaultAsync(m => m.ID == id);
+            var employee = await _context.Employees
+                                .Include(e => e.Departments)
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(m => m.ID == id);
 
             if (employee == null) return NotFound();
 
@@ -40,6 +48,7 @@ namespace MKR_Code_Challenge.Controllers
         // GET: Employees/Create
         public IActionResult Create()
         {
+            PopulateDepartmentsDropDownList();
             return View();
         }
 
@@ -56,6 +65,8 @@ namespace MKR_Code_Challenge.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            PopulateDepartmentsDropDownList(employee.Departments.DepartmentID);
             return View(employee);
         }
 
@@ -64,42 +75,49 @@ namespace MKR_Code_Challenge.Controllers
         {
             if (id == null) return NotFound();
 
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _context.Employees
+                                .Include(e => e.Departments)
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(m => m.ID == id);
 
             if (employee == null) return NotFound();
 
+            PopulateDepartmentsDropDownList(employee.Departments.DepartmentID);
             return View(employee);
         }
 
         // POST: Employees/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,FirstName,LastName,PhoneNumber")] Employee employee)
+        public async Task<IActionResult> EditPost(int? id)
         {
-            if (id != employee.ID) return NotFound();
+            if (id == null) return NotFound();
 
-            if (ModelState.IsValid)
+            var employee = await _context.Employees
+                                .Include(e => e.Departments)
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (await TryUpdateModelAsync<Employee>(employee,""))
             {
                 try
                 {
-                    _context.Update(employee);
+                   // _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!EmployeeExists(employee.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            PopulateDepartmentsDropDownList(employee.Departments.DepartmentID);
             return View(employee);
         }
 
@@ -126,9 +144,19 @@ namespace MKR_Code_Challenge.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        //Helper
         private bool EmployeeExists(int id)
         {
             return _context.Employees.Any(e => e.ID == id);
+        }
+
+        private void PopulateDepartmentsDropDownList(object selectedDepartment = null)
+        {
+            var departmentsQuery = from d in _context.Departments
+                                   orderby d.DepartmentName
+                                   select d;
+            ViewBag.DepartmentID = new SelectList(departmentsQuery.AsNoTracking(), "DepartmentID", "Name", selectedDepartment);
         }
     }
 }

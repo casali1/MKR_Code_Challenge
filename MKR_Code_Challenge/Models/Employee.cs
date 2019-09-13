@@ -14,7 +14,7 @@ namespace MKR_Code_Challenge.Models
             public string LastName { get; set; }          
             public string PhoneNumber { get; set; }
 
-            public ICollection<Department> Departments { get; set; }
+            public Department Departments { get; set; }
         }
     }
 }
